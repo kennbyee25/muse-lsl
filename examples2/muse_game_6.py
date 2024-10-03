@@ -159,10 +159,6 @@ class App(QtWidgets.QMainWindow):
 
             # Only keep the channel we're interested in
             try:
-                # self.ch_data = np.array(self.eeg_data)[:, self.INDEX_CHANNEL]
-                #             # Update EEG buffer with the new data
-                # self.l_data = np.array(self.eeg_data)[:, 0:2]
-                # self.r_data = np.array(self.eeg_data)[:, 2:4]
                 self.eeg_buffer, self.filter_state = utils.update_buffer(
                     self.eeg_buffer, np.array(self.eeg_data), notch=True,
                     filter_state=self.filter_state)
@@ -171,36 +167,16 @@ class App(QtWidgets.QMainWindow):
                 # Get newest samples from the buffer
                 self.data_epoch = utils.get_last_data(self.eeg_buffer,
                                                  self.EPOCH_LENGTH * self.fs)
-                # print('data epoch')
-                # print(self.data_epoch.shape)
 
                 # Compute band powers
-                n_bands = self.eeg_buffer.shape[1]
                 self.band_powers, self.PSD, self.freqs, self.max_mag = utils.compute_band_powers(self.data_epoch, self.fs)
-                # print('band  power')
-                # print(self.band_powers.shape)
-                # print('PSD')
-                # print(self.PSD.shape)
-                # print('freqs')
-                # print(self.freqs.shape)
-                # print('max mag')
-                # print(self.max_mag.shape)
-                # print('band buffer 1')
-                # print(self.band_buffer.shape)
                 self.band_buffer, _ = utils.update_buffer(self.band_buffer,
                                                     np.asarray([self.band_powers]))
-                # print('band buffer 2')
-                # print(self.band_buffer.shape)
-                # print('psd buffer 1')
-                # print(self.psd_buffer.shape)
                 self.psd_buffer, _ = utils.update_buffer(self.psd_buffer,
                                                     np.asarray([self.PSD]))
-                # print('psd buffer 2')
-                # print(self.psd_buffer.shape)
                 # Compute the average band powers for all epochs in buffer
                 # This helps to smooth out noise
                 self.smooth_band_powers = np.mean(self.band_buffer, axis=0)
-                # print(self.smooth_band_powers)
 
                 # print('Delta: ', band_powers[Band.Delta], ' Theta: ', band_powers[Band.Theta],
                 #       ' Alpha: ', band_powers[Band.Alpha], ' Beta: ', band_powers[Band.Beta])
