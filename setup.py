@@ -39,6 +39,9 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=[
+        "opentelemetry-api",
+        "opentelemetry-sdk",
+        "opentelemetry-exporter-otlp",
         "bitstring",
         "bleak>=0.18.0",
         "pygatt",
